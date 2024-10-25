@@ -3,42 +3,40 @@ const bodyParser = require('body-parser')
 const mysql = require("mysql");
 const cors = require('cors');
 const server = express();
+require('dotenv').config();
+
 server.use(bodyParser.json());
 server.use(cors());
 
  
 
-//Establish the database connection
-
 const db = mysql.createConnection({
-    host: "127.0.0.1",
-    user: "root",
-    password: "",
-    database: "dbsmschool",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
+
  
 
 
 db.connect(function (error) {
-    if (error) {
-      console.log("Error Connecting to DB");
-    } else {
-      console.log("successfully Connected to DB");
-    }
-  });
-
-//Establish the Port
-
-server.listen(8085,function check(error) {
-    if (error) 
-    {
-    console.log("Error....dddd!!!!");
-    }
-    else 
-    {
-        console.log("Started....!!!! 8085");
-    }
+  if (error) {
+      console.error("Error Connecting to DB:", error.message);
+  } else {
+      console.log("Successfully Connected to DB");
+  }
 });
+
+const PORT = process.env.PORT || 8085;
+server.listen(PORT, function check(error) {
+      if (error) {
+          console.log("Error starting the server.");
+      } else {
+          console.log(`Server started on port ${PORT}`);
+      }
+  });
+  
 
 //Create the Records
 
